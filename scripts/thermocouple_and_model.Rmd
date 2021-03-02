@@ -1,0 +1,56 @@
+---
+title: "Thermocouple and Model Data"
+author: "Brianne"
+date: "2/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load the Data
+```{r}
+data <- read.csv("data/thermocouple_actualdata.csv")
+data$time <- data$ï..Time
+data$Depth <- as.factor(data$Depth)
+```
+
+Load Libraries 
+```{r, echo = FALSE}
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+```
+
+Plot for Bare 450 with the model 450
+```{r, echo = FALSE}
+bare450 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("Bare450", "Model450")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+
+ggplotly(bare450)
+
+```
+
+Plot for Bare 600 with the model 600
+```{r, echo = FALSE}
+bare600 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("Bare600", "Model600")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+
+ggplotly(bare600)
+
+```
+
+Plot for BSC 450 with the model 450
+```{r}
+bsc450 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("BSC450", "Model450")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+
+ggplotly(bsc450)
+
+```
+
+Plot for BSC 600 with the model 600
+```{r}
+bsc600 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("BSC600", "Model600")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+
+ggplotly(bsc600)
+
+```
