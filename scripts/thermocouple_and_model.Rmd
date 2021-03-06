@@ -7,13 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-Load the Data
-```{r}
-data <- read.csv("data/thermocouple_actualdata.csv")
-data$time <- data$ï..Time
-data$Depth <- as.factor(data$Depth)
+knitr::opts_knit$set(root.dir = "C:/Users/Brianne/Documents/Simulated-Burn/")
 ```
 
 Load Libraries 
@@ -23,9 +17,21 @@ library(plotly)
 library(htmlwidgets)
 ```
 
+Load the Data
+```{r}
+
+data <- read.csv("data/thermocouple_actualdata.csv")
+data$time <- data$ï..Time
+data$Depth <- as.factor(data$Depth)
+
+new.df <- na.omit(data)
+
+new.df <- new.df %>%  group_by(Depth, time, Type, Temperature, ID) %>% summarize(Mean_Temp = mean(Temperature.1))
+```
+
 Plot for Bare 450 with the model 450
 ```{r, echo = FALSE}
-bare450 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("Bare450", "Model450")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+bare450 <- ggplot(new.df %>% filter(Temperature == "450", Mean_Temp >0, time < 60, Type != "BSC"), aes(x = time, y = Mean_Temp, color = Depth)) + geom_point(alpha = 0.5, size = 0.3)
 
 ggplotly(bare450)
 
@@ -33,7 +39,7 @@ ggplotly(bare450)
 
 Plot for Bare 600 with the model 600
 ```{r, echo = FALSE}
-bare600 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("Bare600", "Model600")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+bare600 <- ggplot(new.df %>% filter(Temperature == "600", Mean_Temp >0, time < 60, Type != "BSC"), aes(x = time, y = Mean_Temp, color = Depth)) + geom_point(alpha = 0.5, size = 0.3)
 
 ggplotly(bare600)
 
@@ -41,7 +47,8 @@ ggplotly(bare600)
 
 Plot for BSC 450 with the model 450
 ```{r}
-bsc450 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("BSC450", "Model450")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+bsc450 <- ggplot(new.df %>% filter(Temperature == "450", Mean_Temp >0, time < 60, Type != "Bare"), aes(x = time, y = Mean_Temp, color = Depth)) + geom_point(alpha = 0.5, size = 0.3)
+
 
 ggplotly(bsc450)
 
@@ -49,7 +56,7 @@ ggplotly(bsc450)
 
 Plot for BSC 600 with the model 600
 ```{r}
-bsc600 <- ggplot(data %>% filter(Temperature.1 > 10, time <60, ID == c("BSC600", "Model600")), aes(x = time, y = Temperature.1, shape = Depth, color = Sample)) + geom_point(alpha = 0.5, size = 0.3)
+bsc600 <- ggplot(new.df %>% filter(Temperature == "600", Mean_Temp >0, time < 60, Type != "Bare"), aes(x = time, y = Mean_Temp, color = Depth)) + geom_point(alpha = 0.5, size = 0.3)
 
 ggplotly(bsc600)
 
